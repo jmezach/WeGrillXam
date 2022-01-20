@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WeGrillXam.App">
+    <!--
+        Define global resources and styles here, that apply to all pages in your app.
+    -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="LightBackgroundColor">#e6e6e6</Color> <!-- Mercury -->
+            <Color x:Key="LightPrimaryColor">#080707</Color> <!-- Cod Gray -->
+            <Color x:Key="LightSecondaryColor">#5e5d5d</Color> <!-- Scorpion -->
+
+            <Color x:Key="DarkBackgroundColor">#080707</Color> <!-- Cod Gray -->
+            <Color x:Key="DarkPrimaryColor">#e6e6e6</Color> <!-- Mercury -->
+            <Color x:Key="DarkSecondaryColor">#5e5d5d</Color> <!-- Scorpion -->
+            <LinearGradientBrush x:Key="DarkSliderGradient" StartPoint="0,0" EndPoint="1,0">
+                <GradientStop Color="#442349" Offset="0.1" /> <!-- Bossanova -->
+                <GradientStop Color="#a86162" Offset="1.0" /> <!-- Coral Tree -->
+            </LinearGradientBrush>
+
+            <Style TargetType="ContentPage" ApplyToDerivedTypes="True">
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackgroundColor}, Dark={StaticResource DarkBackgroundColor}}" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"></Setter>
+                <Setter Property="CornerRadius" Value="5" />
+                <Setter Property="CharacterSpacing" Value="3" />
+                <Setter Property="FontFamily" Value="CortisaPro" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightSecondaryColor}, Dark={StaticResource DarkSecondaryColor}}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Disabled">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="#332196F3" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="CortisaPro" />
+                <Setter Property="FontAttributes" Value="Bold" />
+            </Style>
+        </ResourceDictionary>        
+    </Application.Resources>
+</Application>
+

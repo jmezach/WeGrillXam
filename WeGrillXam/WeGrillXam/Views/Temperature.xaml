@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:WeGrillXam.Controls"
+    Title="Temperature"
+    x:Class="WeGrillXam.Views.Temperature">
+    <ContentPage.Content>
+        <StackLayout Orientation="Vertical" Margin="20">
+            <controls:Gauge VerticalOptions="FillAndExpand" Value="87"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource LightBackgroundColor}, Dark={StaticResource DarkBackgroundColor}}"
+                            StartColor="#452d9b" EndColor="#a86162"
+                            NeedleColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"/>
+            <StackLayout Orientation="Vertical" Margin="0,10">
+                <BoxView BackgroundColor="{AppThemeBinding Light={StaticResource LightSecondaryColor}, Dark={StaticResource DarkSecondaryColor}}"
+                         HeightRequest="2"
+                         CornerRadius="20" />
+            </StackLayout>
+            <StackLayout VerticalOptions="End">
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="PROBE 1"
+                           TextColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                           CharacterSpacing="3"
+                           FontSize="Subtitle" />
+                    <Label Text="84°"
+                           FontSize="Medium"
+                           TextColor="#a86162"
+                           CharacterSpacing="1"
+                           HorizontalOptions="EndAndExpand" />
+                    <Label Text="165"
+                           FontSize="Medium"
+                           TextColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                           CharacterSpacing="1"
+                           HorizontalOptions="End" />
+                </StackLayout>
+                <Slider Maximum="100"
+                        Value="80"
+                        MinimumTrackColor="#452d9b"
+                        MaximumTrackColor="#a86162"
+                        ThumbColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"/>
+                <StackLayout Orientation="Horizontal">
+                    <Label Text="PROBE 2"
+                           TextColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                           CharacterSpacing="3"
+                           FontSize="Subtitle" />
+                    <Label Text="106°"
+                           FontSize="Medium"
+                           TextColor="#a86162"
+                           CharacterSpacing="1"
+                           HorizontalOptions="EndAndExpand" />
+                    <Label Text="185"
+                           FontSize="Medium"
+                           TextColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
+                           CharacterSpacing="1"
+                           HorizontalOptions="End" />
+                </StackLayout>
+                <Slider Maximum="100"
+                        Value="90"
+                        MinimumTrackColor="#452d9b"
+                        MaximumTrackColor="#a86162"
+                        ThumbColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"/>
+                <Button Text="ADD TIMER" Margin="0,10" HeightRequest="70" ContentLayout="Top,10">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="FA" Glyph="&#xf017;" />
+                    </Button.ImageSource>
+                </Button>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
+
