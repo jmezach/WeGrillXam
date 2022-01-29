@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />  
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
-    <PackageReference Include="Shiny" Version="2.4.1.2971" />
-    <PackageReference Include="Shiny.BluetoothLE" Version="2.4.1.2971" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />  
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
+    <PackageReference Include="Shiny" Version="2.4.2.2996" />
+    <PackageReference Include="Shiny.BluetoothLE" Version="2.4.2.2996" />
     <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.3" />
   </ItemGroup>
   <ItemGroup>

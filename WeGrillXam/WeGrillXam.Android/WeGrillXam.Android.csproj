@@ -59,10 +59,10 @@
     <Reference Include="Mono.Android.Export" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.1" />
     <PackageReference Include="Shiny">
-      <Version>2.4.1.2971</Version>
+      <Version>2.4.2.2996</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,7 @@
     <ProjectReference Include="..\WeGrillXam\WeGrillXam.csproj">
       <Project>{97A3A718-712D-4E09-8B85-300E29B60658}</Project>
       <Name>WeGrillXam</Name>
+      <ReferenceSourceTarget></ReferenceSourceTarget>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
