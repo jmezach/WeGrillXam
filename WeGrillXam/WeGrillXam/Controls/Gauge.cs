@@ -20,6 +20,15 @@ namespace WeGrillXam.Controls
             set { SetValue(ValueProperty, value); }
         }
 
+        public static readonly BindableProperty TargetValueProperty =
+            BindableProperty.Create(nameof(TargetValue), typeof(float), typeof(Gauge), 0.0f);
+
+        public float TargetValue
+        {
+            get { return (float)GetValue(TargetValueProperty); }
+            set { SetValue(TargetValueProperty, value); }
+        }
+
         public static readonly BindableProperty StartValueProperty =
             BindableProperty.Create(nameof(StartValue), typeof(float), typeof(Gauge), 0.0f);
 
@@ -57,15 +66,6 @@ namespace WeGrillXam.Controls
         }
 
         // Properties for the Colors
-        public static readonly BindableProperty GaugeLineColorProperty =
-            BindableProperty.Create(nameof(GaugeLineColor), typeof(Color), typeof(Gauge), Color.FromHex("#70CBE6"));
-
-        public Color GaugeLineColor
-        {
-            get { return (Color)GetValue(GaugeLineColorProperty); }
-            set { SetValue(GaugeLineColorProperty, value); }
-        }
-
         public static readonly BindableProperty ValueColorProperty =
             BindableProperty.Create(nameof(ValueColor), typeof(Color), typeof(Gauge), Color.FromHex("FF9A52"));
 
@@ -73,15 +73,6 @@ namespace WeGrillXam.Controls
         {
             get { return (Color)GetValue(ValueColorProperty); }
             set { SetValue(ValueColorProperty, value); }
-        }
-
-        public static readonly BindableProperty RangeColorProperty =
-            BindableProperty.Create(nameof(RangeColor), typeof(Color), typeof(Gauge), Color.FromHex("#E6F4F7"));
-
-        public Color RangeColor
-        {
-            get { return (Color)GetValue(RangeColorProperty); }
-            set { SetValue(RangeColorProperty, value); }
         }
 
         public static readonly BindableProperty NeedleColorProperty =
@@ -111,19 +102,19 @@ namespace WeGrillXam.Controls
             set { SetValue(EndColorProperty, value); }
         }
 
-        // Properties for the Units
+        public static readonly BindableProperty TargetColorProperty =
+            BindableProperty.Create(nameof(TargetColor), typeof(Color), typeof(Gauge), Color.FromRgb(0, 0, 0));
 
-        public static readonly BindableProperty UnitsTextProperty =
-            BindableProperty.Create("UnitsText", typeof(string), typeof(Gauge), "");
-
-        public string UnitsText
+        public Color TargetColor
         {
-            get { return (string)GetValue(UnitsTextProperty); }
-            set { SetValue(UnitsTextProperty, value); }
+            get { return (Color)GetValue(TargetColorProperty); }
+            set { SetValue(TargetColorProperty, value); }
         }
 
+        // Properties for the Units
+
         public static readonly BindableProperty ValueFontSizeProperty =
-           BindableProperty.Create("ValueFontSize", typeof(float), typeof(Gauge), 33f);
+           BindableProperty.Create("ValueFontSize", typeof(float), typeof(Gauge), 50f);
 
         public float ValueFontSize
         {
@@ -217,33 +208,58 @@ namespace WeGrillXam.Controls
             SKPaint textPaint = new SKPaint
             {
                 IsAntialias = true,
-                Color = SKColors.Black
+                Color = ValueColor.ToSKColor()
             };
 
-            float textWidth = textPaint.MeasureText(UnitsText);
-            textPaint.TextSize = 12f;
-
-            SKRect textBounds = SKRect.Empty;
-            textPaint.MeasureText(UnitsText, ref textBounds);
-
-            float xText = -1 * textBounds.MidX;
-            float yText = 95 - textBounds.Height;
-
-            // And draw the text
-            canvas.DrawText(UnitsText, xText, yText, textPaint);
-
             // Draw the Value on the display
-            var valueText = Value.ToString("F0"); //You can set F1 or F2 if you need float values
+            var valueText = Value.ToString("F0") + "°"; //You can set F1 or F2 if you need float values
             float valueTextWidth = textPaint.MeasureText(valueText);
             textPaint.TextSize = ValueFontSize;
 
+            SKRect textBounds = SKRect.Empty;
             textPaint.MeasureText(valueText, ref textBounds);
 
-            xText = -1 * textBounds.MidX;
-            yText = 85 - textBounds.Height;
+            float xText = -1 * textBounds.MidX;
+            float yText = 30 - textBounds.Height;
 
             // And draw the text
             canvas.DrawText(valueText, xText, yText, textPaint);
+
+            // Draw the Target value on the display
+            SKPaint targetValueTextPaint = new SKPaint
+            {
+                IsAntialias = true,
+                Color = NeedleColor.ToSKColor()
+            };
+
+            var targetValueText = TargetValue.ToString("F0");
+            float targetValueTextWidth = textPaint.MeasureText(targetValueText);
+            targetValueTextPaint.TextSize = ValueFontSize - 15;
+
+            SKRect targetValueTextBounds = SKRect.Empty;
+            targetValueTextPaint.MeasureText(targetValueText, ref targetValueTextBounds);
+
+            float xTargetValueText = (-1 * targetValueTextBounds.MidX) + 10;
+            float yTargetValueText = 75 - targetValueTextBounds.Height;
+
+            canvas.DrawText(targetValueText, xTargetValueText, yTargetValueText, targetValueTextPaint);
+
+            // Draw the target
+            SKPaint targetPaint = new SKPaint
+            {
+                IsAntialias = true,
+                Color = TargetColor.ToSKColor(),
+                IsStroke = true,
+                StrokeWidth = 2
+            };
+
+            SKPoint targetCenter = new SKPoint(targetValueTextBounds.Left - 50, yTargetValueText - (targetValueTextBounds.Height / 2));
+            canvas.DrawCircle(targetCenter, 10f, targetPaint);
+            canvas.DrawLine(new SKPoint(targetCenter.X - 16f, targetCenter.Y), new SKPoint(targetCenter.X - 6f, targetCenter.Y), targetPaint);
+            canvas.DrawLine(new SKPoint(targetCenter.X + 16f, targetCenter.Y), new SKPoint(targetCenter.X + 6f, targetCenter.Y), targetPaint);
+            canvas.DrawLine(new SKPoint(targetCenter.X, targetCenter.Y - 16f), new SKPoint(targetCenter.X, targetCenter.Y - 6f), targetPaint);
+            canvas.DrawLine(new SKPoint(targetCenter.X, targetCenter.Y + 16f), new SKPoint(targetCenter.X, targetCenter.Y + 6f), targetPaint);
+
             canvas.Restore();
         }
 
@@ -305,10 +321,9 @@ namespace WeGrillXam.Controls
                 || propertyName == HeightProperty.PropertyName
                 || propertyName == StartValueProperty.PropertyName
                 || propertyName == EndValueProperty.PropertyName
-                || propertyName == GaugeLineColorProperty.PropertyName
                 || propertyName == ValueColorProperty.PropertyName
-                || propertyName == RangeColorProperty.PropertyName
-                || propertyName == UnitsTextProperty.PropertyName)
+                || propertyName == TargetValueProperty.PropertyName
+                || propertyName == TargetColorProperty.PropertyName)
             {
                 InvalidateSurface();
             }
