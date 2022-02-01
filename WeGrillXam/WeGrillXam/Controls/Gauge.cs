@@ -8,6 +8,7 @@ namespace WeGrillXam.Controls
 	public class Gauge : SKCanvasView
 	{
         private const float INNER_CIRCLE_RADIUS = 125f;
+        private const float OUTER_CIRCLE_THICKNESS = 40f;
 
         #region Properties
         // Properties for the Values
@@ -27,42 +28,6 @@ namespace WeGrillXam.Controls
         {
             get { return (float)GetValue(TargetValueProperty); }
             set { SetValue(TargetValueProperty, value); }
-        }
-
-        public static readonly BindableProperty StartValueProperty =
-            BindableProperty.Create(nameof(StartValue), typeof(float), typeof(Gauge), 0.0f);
-
-        public float StartValue
-        {
-            get { return (float)GetValue(StartValueProperty); }
-            set { SetValue(StartValueProperty, value); }
-        }
-
-        public static readonly BindableProperty EndValueProperty =
-            BindableProperty.Create(nameof(EndValue), typeof(float), typeof(Gauge), 100.0f);
-
-        public float EndValue
-        {
-            get { return (float)GetValue(EndValueProperty); }
-            set { SetValue(EndValueProperty, value); }
-        }
-
-        public static readonly BindableProperty HighlightRangeStartValueProperty =
-            BindableProperty.Create(nameof(HighlightRangeStartValue), typeof(float), typeof(Gauge), 70.0f);
-
-        public float HighlightRangeStartValue
-        {
-            get { return (float)GetValue(HighlightRangeStartValueProperty); }
-            set { SetValue(HighlightRangeStartValueProperty, value); }
-        }
-
-        public static readonly BindableProperty HighlightRangeEndValueProperty =
-            BindableProperty.Create(nameof(HighlightRangeEndValue), typeof(float), typeof(Gauge), 100.0f);
-
-        public float HighlightRangeEndValue
-        {
-            get { return (float)GetValue(HighlightRangeEndValueProperty); }
-            set { SetValue(HighlightRangeEndValueProperty, value); }
         }
 
         // Properties for the Colors
@@ -155,16 +120,15 @@ namespace WeGrillXam.Controls
             // Draw the main gauge
             var startAngle = 135;
             var sweepAngle = 270f;
+            var highlightAngle = (Value / 100) * 270f;
 
-            var shader = SKShader.CreateSweepGradient(center, new SKColor[] { StartColor.ToSKColor(), EndColor.ToSKColor() },
-                SKShaderTileMode.Decal, 0, 270);
             var mainGuagePaint = new SKPaint
             {
                 IsAntialias = true,
                 Style = SKPaintStyle.Stroke,
                 StrokeCap = SKStrokeCap.Round,
-                Shader = shader,
-                StrokeWidth = 50
+                Color = ValueColor.ToSKColor(),
+                StrokeWidth = OUTER_CIRCLE_THICKNESS
             };
 
             canvas.Save();
@@ -176,6 +140,42 @@ namespace WeGrillXam.Controls
                 canvas.Restore();
             }
 
+            var highlightShader = SKShader.CreateSweepGradient(center, new SKColor[] { StartColor.ToSKColor(), EndColor.ToSKColor() },
+                SKShaderTileMode.Decal, 0, 270);
+
+            var highlightPaint = new SKPaint
+            {
+                IsAntialias = true,
+                Style = SKPaintStyle.Stroke,
+                StrokeCap = SKStrokeCap.Square,
+                Shader = highlightShader,
+                StrokeWidth = OUTER_CIRCLE_THICKNESS
+            };
+
+            canvas.Save();
+            using (SKPath path = new SKPath())
+            {
+                canvas.RotateDegrees(startAngle);
+                path.AddArc(rect, 0, highlightAngle);
+                canvas.DrawPath(path, highlightPaint);
+                canvas.Restore();
+            }
+
+            if (Value > 0)
+            {
+                canvas.Save();
+                canvas.RotateDegrees(startAngle);
+                canvas.DrawArc(rect, 0, 1, false, new SKPaint
+                {
+                    IsAntialias = true,
+                    Style = SKPaintStyle.Stroke,
+                    StrokeCap = SKStrokeCap.Round,
+                    Color = StartColor.ToSKColor(),
+                    StrokeWidth = OUTER_CIRCLE_THICKNESS
+                });
+                canvas.Restore();
+            }
+
             // Draw the overlaying lines
             var linesOverlayPaint = new SKPaint
             {
@@ -183,12 +183,12 @@ namespace WeGrillXam.Controls
                 Style = SKPaintStyle.Stroke,
                 Color = BackgroundColor.ToSKColor(),
                 PathEffect = SKPathEffect.CreateDash(new float[] { 2, 14 }, 0),
-                StrokeWidth = 50
+                StrokeWidth = OUTER_CIRCLE_THICKNESS
             };
 
             using (SKPath path = new SKPath())
             {
-                path.AddArc(rect, startAngle, sweepAngle);
+                path.AddArc(rect, startAngle - 2, sweepAngle + 2);
                 canvas.DrawPath(path, linesOverlayPaint);
             }
 
@@ -202,7 +202,7 @@ namespace WeGrillXam.Controls
             canvas.DrawCircle(center, INNER_CIRCLE_RADIUS, centerCirclePaint);
 
             //Draw Needle
-            DrawNeedle(canvas, Value);
+            DrawNeedle(canvas, TargetValue);
 
             // Draw the Units of Measurement Text on the display
             SKPaint textPaint = new SKPaint
@@ -263,11 +263,6 @@ namespace WeGrillXam.Controls
             canvas.Restore();
         }
 
-        float AmountToAngle(float value)
-        {
-            return 135f + (value / (EndValue - StartValue)) * 270f;
-        }
-
         void DrawNeedle(SKCanvas canvas, float value)
         {
             float angle = -135f + (value / (100 - 0)) * 270f;
@@ -314,13 +309,9 @@ namespace WeGrillXam.Controls
 
             // Determine when to change. Basically on any of the properties that we've added that affect
             // the visualization, including the size of the control, we'll repaint
-            if (propertyName == HighlightRangeEndValueProperty.PropertyName
-                || propertyName == HighlightRangeStartValueProperty.PropertyName
-                || propertyName == ValueProperty.PropertyName
+            if (propertyName == ValueProperty.PropertyName
                 || propertyName == WidthProperty.PropertyName
                 || propertyName == HeightProperty.PropertyName
-                || propertyName == StartValueProperty.PropertyName
-                || propertyName == EndValueProperty.PropertyName
                 || propertyName == ValueColorProperty.PropertyName
                 || propertyName == TargetValueProperty.PropertyName
                 || propertyName == TargetColorProperty.PropertyName)

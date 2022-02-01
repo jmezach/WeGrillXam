@@ -7,9 +7,9 @@
     x:Class="WeGrillXam.Views.Temperature">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical" Margin="20">
-            <controls:Gauge VerticalOptions="FillAndExpand" Value="100" TargetValue="475"
+            <controls:Gauge VerticalOptions="FillAndExpand" Value="90" TargetValue="85"
                             BackgroundColor="{AppThemeBinding Light={StaticResource LightBackgroundColor}, Dark={StaticResource DarkBackgroundColor}}"
-                            StartColor="#626bef" EndColor="#612f43" ValueColor="#612f43"
+                            StartColor="#626bef" EndColor="#c3839d" ValueColor="#612f43"
                             NeedleColor="{AppThemeBinding Light={StaticResource LightPrimaryColor}, Dark={StaticResource DarkPrimaryColor}}"
                             TargetColor="{AppThemeBinding Light={StaticResource LightSecondaryColor}, Dark={StaticResource DarkSecondaryColor}}" />
             <StackLayout Orientation="Vertical" Margin="0,10">
